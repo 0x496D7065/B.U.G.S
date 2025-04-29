@@ -14,7 +14,8 @@ public class WeaponHolder : MonoBehaviour
         if (currentWeapon.FullAuto == false)
             wantsToFire = Input.GetMouseButtonDown(0);
         else
-            wantsToFire = Input.GetMouseButtonDown(0) || Input.GetMouseButton(0);
+            wantsToFire = Input.GetMouseButton(0);
+        //wantsToFire = Input.GetMouseButtonDown(0) || Input.GetMouseButton(0);
         nextFireTime -= Time.deltaTime;
         if (wantsToFire && Time.deltaTime >= nextFireTime && currentWeapon.currentMag > 0)
         {

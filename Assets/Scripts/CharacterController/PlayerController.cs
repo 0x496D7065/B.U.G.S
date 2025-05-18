@@ -52,7 +52,6 @@ public class PlayerController : MonoBehaviour
         Vector3 inputDir = playerBody.right * inputMovement.x + playerBody.forward * inputMovement.z;
         inputDir.y = 0f;
         inputDir.Normalize();
-        Debug.Log(usedSpeed);
 
         Vector3 move;
         if (keepMomentum)

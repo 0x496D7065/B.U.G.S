@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPooler : MonoBehaviour
+public class EnemyPooler : MonoBehaviour
 {
     public GameObject prefab;
+    public Transform player;
     public int poolSize = 20;
 
     private Queue<GameObject> pool = new Queue<GameObject>();
 
     void Start()
     {
-        Debug.Log($"[Pooler] Initializing pool on {gameObject.name}");
         for (int i = 0; i < poolSize; i++)
         {
             GameObject obj = Instantiate(prefab);

@@ -5365,8 +5365,8 @@ MonoBehaviour:
   muzzleFlashPrefab: {fileID: 7896150605568949197, guid: 8d182a120de5663489c9fa4ca1df2035, type: 3}
   shootSound: {fileID: 8300000, guid: 2f9862c159fe5f840bd5a4b0f0a86af1, type: 3}
   casingParticles: {fileID: 8546448683342158859}
-  fireRate: 1
-  projectileSpeed: 2000
+  fireRate: 0.2
+  projectileSpeed: 200
   FullAuto: 1
   magSize: 16
   ammoPoolSize: 200

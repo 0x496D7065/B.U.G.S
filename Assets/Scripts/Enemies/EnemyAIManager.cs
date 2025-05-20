@@ -40,9 +40,36 @@ public class EnemyAIManager : MonoBehaviour
     }
     private void Update()
     {
-        foreach (var data in trackedEnemies)
+        /*foreach (var data in trackedEnemies)
         {
             if (data.agent == null) continue;
+            if (Time.time >= data.nextDetectionTime)
+            {
+                Transform nearestPlayer = GetNearestPlayerInRange(data.agent, playerDetectionRadius);
+                data.nextDetectionTime = Time.time + 0.5f;
+                if (nearestPlayer != null)
+                {
+                    // See a player? Chase and reset memory
+                    data.lastSeenPlayer = nearestPlayer;
+                    data.lastSeenTime = Time.time;
+                    data.agent.SetTarget(nearestPlayer);
+                }
+                else if (Time.time - data.lastSeenTime < data.memoryDuration)
+                {
+                    // Player out of range, but memory still valid
+                    data.agent.SetTarget(data.lastSeenPlayer);
+                }
+                else
+                {
+                    // No player seen, memory expired
+                    data.agent.BackToFlowField();
+                }
+            }
+        }*/
+        for (int i = trackedEnemies.Count - 1; i >= 0; i--)
+        {
+            var data = trackedEnemies[i];
+            //if (data.agent == null) continue;
             if (Time.time >= data.nextDetectionTime)
             {
                 Transform nearestPlayer = GetNearestPlayerInRange(data.agent, playerDetectionRadius);
@@ -92,10 +119,15 @@ public class EnemyAIManager : MonoBehaviour
             lastSeenTime = -999f,
             memoryDuration = 5f
         });
+        agent.OnDeath += HandleEnemyDeath;
     }
-
+    private void HandleEnemyDeath(EnemyAgent agent)
+    {
+        UnregisterEnemy(agent);
+    }
     public void UnregisterEnemy(EnemyAgent agent)
     {
+        agent.OnDeath -= HandleEnemyDeath;
         trackedEnemies.RemoveAll(e => e.agent == agent);
     }
 }

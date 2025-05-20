@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2448172580388317480}
   m_Layer: 9
   m_Name: EnemyV0
-  m_TagString: Untagged
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -108,7 +108,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5079272102333721428
 MonoBehaviour:
@@ -123,6 +123,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 7
+  health: 50
+  isDead: 0
   currentMode: 0
   gridController: {fileID: 0}
   enemyLayerMask:

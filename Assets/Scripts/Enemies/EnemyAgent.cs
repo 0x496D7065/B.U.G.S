@@ -1,9 +1,14 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem.Processors;
 
 public class EnemyAgent : MonoBehaviour
 {
     public float moveSpeed = 2.5f;
+    public int health = 50;
+    public bool isDead = false;
+    public event Action<EnemyAgent> OnDeath;
 
     private Transform directTarget; // manual targeting
     public enum TargetType { FlowField, Player }
@@ -42,5 +47,21 @@ public class EnemyAgent : MonoBehaviour
             Vector3 dir = new Vector3(cellBelow.bestDirection.Vector.x, 0, cellBelow.bestDirection.Vector.y);
             transform.position += moveSpeed * Time.deltaTime * dir;
         }
+    }
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0 && !isDead)
+        {
+            Die();
+        }
+    }
+    public void Die()
+    {
+        if (isDead) return;
+
+        isDead = true;
+        OnDeath?.Invoke(this);
+        gameObject.SetActive(false);
     }
 }

@@ -6,6 +6,7 @@ public class Projectile : MonoBehaviour
 
     private float lifeTimer;
     public float lifeTime = 5f;
+    public int damage = 20;
     void OnEnable()
     {
         lifeTimer = lifeTime;
@@ -23,7 +24,11 @@ public class Projectile : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        // Optional: Check tag/layer here
+        GameObject hitObject = collision.gameObject;
+
+        if (hitObject.CompareTag("enemy"))
+            hitObject.GetComponent<EnemyAgent>().TakeDamage(damage);
+        Debug.Log($"Bullet hit {collision.gameObject.name}");
         gameObject.SetActive(false); // return to pool
     }
 }

@@ -40,13 +40,12 @@ public class FlowField : MonoBehaviour
     {
         Vector3 cellHalfExtents = Vector3.one * cellRadius;
         int terrainMask = LayerMask.GetMask("Obstacles");
-        foreach(Cell curCell in grid)
+        foreach (Cell curCell in grid)
         {
             Collider[] obstacles = Physics.OverlapBox(curCell.worldPos, cellHalfExtents, Quaternion.identity, terrainMask);
             //bool hasIncreasedCost = false;  //need to add difficult terrain later
-            foreach(Collider col in obstacles)
+            foreach (Collider col in obstacles)
             {
-                Debug.Log($"layer: {col.gameObject.layer}");
                 if (col.gameObject.layer == 7)
                 {
                     curCell.IncreaseCost(255);

@@ -565,6 +565,10 @@ PrefabInstance:
       value: EnemySpawnerV0
       objectReference: {fileID: 0}
     - target: {fileID: 3022846357420626524, guid: d41a9b9b1b7232c458b9b760028c2944, type: 3}
+      propertyPath: prefab
+      value: 
+      objectReference: {fileID: 4583414123902911426, guid: 2786f891b4e6c234b8afd6f4533849b5, type: 3}
+    - target: {fileID: 3022846357420626524, guid: d41a9b9b1b7232c458b9b760028c2944, type: 3}
       propertyPath: poolSize
       value: 1000
       objectReference: {fileID: 0}
@@ -582,7 +586,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7276682499086626976, guid: d41a9b9b1b7232c458b9b760028c2944, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 106
+      value: 18.9
       objectReference: {fileID: 0}
     - target: {fileID: 7276682499086626976, guid: d41a9b9b1b7232c458b9b760028c2944, type: 3}
       propertyPath: m_LocalRotation.w

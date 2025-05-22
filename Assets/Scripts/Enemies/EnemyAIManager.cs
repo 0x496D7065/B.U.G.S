@@ -59,7 +59,7 @@ public class EnemyAIManager : MonoBehaviour
         }
     }
 
-    public Transform GetNearestPlayerInRange(EnemyAgent agent, float radius)
+    public Transform GetNearestVisiblePlayerInRange(EnemyAgent agent, float radius)
     {
         Transform closest = null;
         float minDist = radius;

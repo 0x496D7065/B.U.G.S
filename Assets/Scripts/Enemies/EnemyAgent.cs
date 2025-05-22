@@ -6,12 +6,12 @@ using UnityEngine.InputSystem.Processors;
 public class EnemyAgent : MonoBehaviour
 {
     [Header("Stats")]
-    public float moveSpeed = 7f;
-    public int health = 50;
-    public int damage = 20;
-    public float detectionRadius = 10f;
-    public float attackRange = 1f;
-    public float attackCd = 1f;
+    public float moveSpeed;
+    public int health;
+    public int damage;
+    public float detectionRadius;
+    public float attackRange;
+    public float attackCd;
     public bool isDead = false;
     //Event
     public event Action<EnemyAgent> OnDeath;
@@ -21,6 +21,11 @@ public class EnemyAgent : MonoBehaviour
     private Transform lastSeenPlayer;
     private float lastSeenTime = -999f;
     private float memoryDuration = 5f;
+    //Animation Logic
+    private Animator animator;
+    private Transform model;
+    //Attack Logic
+    private float lastAttackTime = -999f;
     //FlowField Logic
     public enum TargetType { FlowField, Player }
     public TargetType currentMode = TargetType.FlowField;
@@ -32,6 +37,8 @@ public class EnemyAgent : MonoBehaviour
         gridController = manager.flowField;
         agentManager = manager;
         currentMode = TargetType.FlowField;
+        animator = GetComponentInChildren<Animator>();
+        model = transform.Find("Model");
         //moveSpeed = UnityEngine.Random.Range((float)6.8, (float)7.2);
     }
 
@@ -53,18 +60,30 @@ public class EnemyAgent : MonoBehaviour
         if (currentMode == TargetType.Player && directTarget != null)
         {
             dir = (directTarget.position - transform.position).normalized;
+            float distToTarget = Vector3.Distance(directTarget.position, transform.position);
+            if (distToTarget > attackRange)
+            {
+                transform.position += moveSpeed * Time.deltaTime * dir.normalized;
+            }
+            TryInitiateAttack();
         }
         else if (currentMode == TargetType.FlowField && gridController != null)
         {
             Cell cellBelow = gridController.curFlowField.GetCellFromWorldPos(transform.position);
             dir = new Vector3(cellBelow.bestDirection.Vector.x, 0, cellBelow.bestDirection.Vector.y);
+            transform.position += moveSpeed * Time.deltaTime * dir.normalized;
         }
-        transform.position += moveSpeed * Time.deltaTime * dir.normalized;
+        model.rotation = Quaternion.LookRotation(dir.normalized, Vector3.up);
+        // Animation logic
+        if (animator != null)
+        {
+            animator.SetBool("isMoving", dir.magnitude > 0.1f);
+        }
     }
     public void TickDetection()
     {
         if (isDead) return;
-        Transform nearestPlayer = agentManager.GetNearestPlayerInRange(this, detectionRadius);
+        Transform nearestPlayer = agentManager.GetNearestVisiblePlayerInRange(this, detectionRadius);
         if (nearestPlayer != null)
         {
             lastSeenPlayer = nearestPlayer;
@@ -75,6 +94,24 @@ public class EnemyAgent : MonoBehaviour
             SetTarget(lastSeenPlayer);
         else
             BackToFlowField();
+    }
+    private void TryInitiateAttack()
+    {
+        Debug.Log($"trying to attack {directTarget.name}");
+        if (Time.time - lastAttackTime < attackCd) return;
+        if (directTarget == null) return;
+
+        float distance = Vector3.Distance(directTarget.position, transform.position);
+        //Debug.Log($"distance= {distance}");
+        Debug.Log($"attackRange= {attackRange}");
+        if (distance <= attackRange)
+            Debug.Log("should be attacking");
+        if (distance <= attackRange)
+        {
+            lastAttackTime = Time.time;
+            Debug.Log($"reached the animator trigger");
+            animator.SetTrigger("Attack");
+        }
     }
     public void TakeDamage(int damage)
     {

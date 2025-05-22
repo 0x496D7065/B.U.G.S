@@ -1,35 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using static UnityEngine.UI.Image;
+using Unity.VisualScripting;
 
 [System.Serializable]
 public class EnemyTrackingData
 {
     public EnemyAgent agent;
-    public Transform lastSeenPlayer;
-    public float memoryDuration;
-    public float lastSeenTime;
-    public float nextDetectionTime;
+    //public Transform lastSeenPlayer;
+    //public float memoryDuration;
+    //public float lastSeenTime;
+    //public float nextDetectionTime;
 
     public EnemyTrackingData(EnemyAgent agent)
     {
         this.agent = agent;
-        this.lastSeenPlayer = null;
-        this.memoryDuration = 5f;
-        this.lastSeenTime = 0f;
+        //this.lastSeenPlayer = null;
+        //this.memoryDuration = 5f;
+        //this.lastSeenTime = 0f;
     }
 }
 public class EnemyAIManager : MonoBehaviour
 {
     public static EnemyAIManager Instance;
 
-    [SerializeField] private float playerDetectionRadius;
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] public GridController flowField;
     [SerializeField] private Transform baseTarget;
+    private int agentsPerFrame;
+    private int detectionIndex = 0;
 
     public List<Transform> allPlayers = new();
     private List<EnemyTrackingData> trackedEnemies = new List<EnemyTrackingData>();
+
+    public LayerMask obstructionMask;
 
     private void Awake()
     {
@@ -37,63 +41,24 @@ public class EnemyAIManager : MonoBehaviour
         flowField.InitializeFlowField(baseTarget.position);
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
             allPlayers.Add(go.transform);
+        obstructionMask = LayerMask.GetMask("Obstacles", "Player");
     }
     private void Update()
     {
-        /*foreach (var data in trackedEnemies)
+        agentsPerFrame = Mathf.Clamp(trackedEnemies.Count / 5, 10, 50);
+        for (int i = 0; i < agentsPerFrame; i++)
         {
-            if (data.agent == null) continue;
-            if (Time.time >= data.nextDetectionTime)
+            if (trackedEnemies.Count == 0) return;
+            detectionIndex %= trackedEnemies.Count;
+            var agent = trackedEnemies[detectionIndex].agent;
+            if (agent != null)
             {
-                Transform nearestPlayer = GetNearestPlayerInRange(data.agent, playerDetectionRadius);
-                data.nextDetectionTime = Time.time + 0.5f;
-                if (nearestPlayer != null)
-                {
-                    // See a player? Chase and reset memory
-                    data.lastSeenPlayer = nearestPlayer;
-                    data.lastSeenTime = Time.time;
-                    data.agent.SetTarget(nearestPlayer);
-                }
-                else if (Time.time - data.lastSeenTime < data.memoryDuration)
-                {
-                    // Player out of range, but memory still valid
-                    data.agent.SetTarget(data.lastSeenPlayer);
-                }
-                else
-                {
-                    // No player seen, memory expired
-                    data.agent.BackToFlowField();
-                }
+                agent.TickDetection();
             }
-        }*/
-        for (int i = trackedEnemies.Count - 1; i >= 0; i--)
-        {
-            var data = trackedEnemies[i];
-            //if (data.agent == null) continue;
-            if (Time.time >= data.nextDetectionTime)
-            {
-                Transform nearestPlayer = GetNearestPlayerInRange(data.agent, playerDetectionRadius);
-                data.nextDetectionTime = Time.time + 0.5f;
-                if (nearestPlayer != null)
-                {
-                    // See a player? Chase and reset memory
-                    data.lastSeenPlayer = nearestPlayer;
-                    data.lastSeenTime = Time.time;
-                    data.agent.SetTarget(nearestPlayer);
-                }
-                else if (Time.time - data.lastSeenTime < data.memoryDuration)
-                {
-                    // Player out of range, but memory still valid
-                    data.agent.SetTarget(data.lastSeenPlayer);
-                }
-                else
-                {
-                    // No player seen, memory expired
-                    data.agent.BackToFlowField();
-                }
-            }
+            detectionIndex++;
         }
     }
+
     public Transform GetNearestPlayerInRange(EnemyAgent agent, float radius)
     {
         Transform closest = null;
@@ -101,24 +66,31 @@ public class EnemyAIManager : MonoBehaviour
         Vector3 origin = agent.transform.position + Vector3.up * 1f;
         foreach (Transform player in allPlayers)
         {
+            Vector3 direction = (player.position - origin).normalized;
             float dist = Vector3.Distance(origin, player.position);
+            //Debug.Log($"dist= {dist}");
+            //Debug.Log($"minDist= {minDist}");
             if (dist < minDist)
             {
-                 closest = player;
-                 minDist = dist;
+                if (Physics.Raycast(origin, direction, out RaycastHit hit, dist, obstructionMask))
+                {
+                    Debug.Log($"Raycast hit: {hit.transform.name}");
+                    if (hit.transform == player || hit.transform.IsChildOf(player))
+                    {
+                        closest = player;
+                        minDist = dist;
+                    }
+                }
+                else
+                    Debug.Log("Raycast did not hit anything.");
             }
         }
 
         return closest;
     }
-
     public void RegisterEnemy(EnemyAgent agent)
     {
-        trackedEnemies.Add(new EnemyTrackingData(agent)
-        {
-            lastSeenTime = -999f,
-            memoryDuration = 5f
-        });
+        trackedEnemies.Add(new EnemyTrackingData(agent){});
         agent.OnDeath += HandleEnemyDeath;
     }
     private void HandleEnemyDeath(EnemyAgent agent)

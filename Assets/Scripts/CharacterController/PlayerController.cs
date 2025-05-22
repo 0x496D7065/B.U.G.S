@@ -11,9 +11,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerInput         playerInput = null;
     [SerializeField] private Transform           playerBody = null;
     [SerializeField] private CharacterController controller = null;
+    [SerializeField] private HealthUI healthUI;
 
-        
-    [Header("Settings")]   
+
+    [Header("Settings")]
+    public int health = 300;
     public float movementSpeed = 2.5f;
     public float gravity = -9.81f;
     public float jumpHeight = 2f;
@@ -25,6 +27,7 @@ public class PlayerController : MonoBehaviour
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
     private bool isGrounded;
+    public bool isDead = false;
 
     private float currentMoveSpeed;
     private bool keepMomentum = false;
@@ -111,6 +114,23 @@ public class PlayerController : MonoBehaviour
         else 
             movementSpeed = 3.5f;
         //animator.SetTrigger("Jump");
+    }
+    public void TakeDamage(int damage)
+    {
+        if (isDead)
+            return;
+        health -= damage;
+        healthUI.UpdateHealthDisplay();
+        if (health <= 0)
+            Die();
+    }
+    public void Die()
+    {
+        if (isDead) return;
+
+        isDead = true;
+        //OnDeath?.Invoke(this);
+        gameObject.SetActive(false);
     }
 }
 

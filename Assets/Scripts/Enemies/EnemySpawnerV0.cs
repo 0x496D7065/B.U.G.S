@@ -22,7 +22,7 @@ public class EnemySpawner : MonoBehaviour
 
         GameObject enemyObj = enemyPool.GetFromPool(spawnPos, Quaternion.identity);
         EnemyAgent agent = enemyObj.GetComponent<EnemyAgent>();
-        agent.Init(aiManager.flowField);
         aiManager.RegisterEnemy(agent);
+        agent.Init(aiManager);
     }
 }

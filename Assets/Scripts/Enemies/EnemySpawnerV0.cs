@@ -7,11 +7,12 @@ public class EnemySpawner : MonoBehaviour
     private EnemyAIManager aiManager;
 
     public float spawnRadius = 50f;
+    public int spawnCount = 1;
 
     public void Start()
     {
         aiManager = GetComponent<EnemyAIManager>();
-        for (int i = 0; i < 150; i++)
+        for (int i = 0; i < spawnCount; i++)
             SpawnEnemy();
     }
     public void SpawnEnemy()

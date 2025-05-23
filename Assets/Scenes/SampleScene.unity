@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 11724541}
   m_Layer: 3
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -571,6 +571,10 @@ PrefabInstance:
     - target: {fileID: 3022846357420626524, guid: d41a9b9b1b7232c458b9b760028c2944, type: 3}
       propertyPath: poolSize
       value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 3806132585696714144, guid: d41a9b9b1b7232c458b9b760028c2944, type: 3}
+      propertyPath: spawnCount
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 3806132585696714144, guid: d41a9b9b1b7232c458b9b760028c2944, type: 3}
       propertyPath: spawnRadius
@@ -3043,7 +3047,7 @@ Transform:
   m_GameObject: {fileID: 930107923}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 64.302246, y: -12.721499, z: 28.23135}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4664,7 +4668,7 @@ Transform:
   m_GameObject: {fileID: 1610314687}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.67999095, z: -0, w: 0.7332206}
-  m_LocalPosition: {x: 47.08, y: 3.5, z: 2.93}
+  m_LocalPosition: {x: 48.9, y: 3.5, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5251,7 +5255,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -150, y: -240}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2067948136

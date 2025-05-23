@@ -26,6 +26,7 @@ public class EnemyAgent : MonoBehaviour
     private Transform model;
     //Attack Logic
     private float lastAttackTime = -999f;
+    private LayerMask playerMask;
     //FlowField Logic
     public enum TargetType { FlowField, Player }
     public TargetType currentMode = TargetType.FlowField;
@@ -39,6 +40,7 @@ public class EnemyAgent : MonoBehaviour
         currentMode = TargetType.FlowField;
         animator = GetComponentInChildren<Animator>();
         model = transform.Find("Model");
+        playerMask = LayerMask.GetMask("Player");
         //moveSpeed = UnityEngine.Random.Range((float)6.8, (float)7.2);
     }
 
@@ -97,20 +99,36 @@ public class EnemyAgent : MonoBehaviour
     }
     private void TryInitiateAttack()
     {
-        Debug.Log($"trying to attack {directTarget.name}");
+        //Debug.Log($"trying to attack {directTarget.name}");
         if (Time.time - lastAttackTime < attackCd) return;
         if (directTarget == null) return;
 
         float distance = Vector3.Distance(directTarget.position, transform.position);
         //Debug.Log($"distance= {distance}");
-        Debug.Log($"attackRange= {attackRange}");
+        //Debug.Log($"attackRange= {attackRange}");
         if (distance <= attackRange)
-            Debug.Log("should be attacking");
+            //Debug.Log("should be attacking");
         if (distance <= attackRange)
         {
             lastAttackTime = Time.time;
-            Debug.Log($"reached the animator trigger");
+            //Debug.Log($"reached the animator trigger");
             animator.SetTrigger("Attack");
+        }
+    }
+    public void TryHit()
+    {
+        Vector3 origin = transform.position + (Vector3.up * (float)0.5f);
+        Vector3 direction = model.forward;
+        //Debug.Log("Casting to hit");
+        //Debug.DrawRay(origin, direction * attackRange, Color.red, 1.0f);
+        if (Physics.Raycast(origin, direction, out RaycastHit hit, attackRange, playerMask))
+        {
+            //Debug.Log("ray has hit");
+            if (hit.transform.CompareTag("Player"))
+            {
+                //Debug.Log("player hit, sending dmg");
+                hit.transform.GetComponentInParent<PlayerController>().TakeDamage(damage);
+            }
         }
     }
     public void TakeDamage(int damage)

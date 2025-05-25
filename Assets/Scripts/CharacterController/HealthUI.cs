@@ -2,19 +2,23 @@ using UnityEngine;
 using TMPro;
 public class HealthUI : MonoBehaviour
 {
-    public PlayerController player;
     public TextMeshProUGUI HealthText;
+    public GameObject TargetObject;
 
     private void Awake()
     {
         HealthText = GetComponentInChildren<TextMeshProUGUI>();
-        UpdateHealthDisplay();
     }
-    public void UpdateHealthDisplay()
+    public void SetTargetObject(GameObject obj)
     {
-        if (player != null && HealthText != null)
-        {
-            HealthText.text = $"Health: {player.health}";
-        }
+        TargetObject = obj;
+    }
+    public void UpdateHealthDisplay(int health, string customLabel)
+    {
+        //if (player != null && HealthText != null)
+        //{
+        //    HealthText.text = $"Health: {player.health}";
+        //}
+        HealthText.text = $"{customLabel}: {health}";
     }
 }

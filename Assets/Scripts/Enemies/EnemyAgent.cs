@@ -17,16 +17,21 @@ public class EnemyAgent : MonoBehaviour
     public event Action<EnemyAgent> OnDeath;
 
     //Manual Targeting and Detection logic
-    private Transform directTarget;
-    private Transform lastSeenPlayer;
+    private TargetInfo? directTarget;
+    private TargetInfo? lastSeenTarget;
     private float lastSeenTime = -999f;
     private float memoryDuration = 5f;
+    public struct TargetInfo
+    {
+        public Transform targetTransform;
+        public Vector3 closestPoint;
+    }
     //Animation Logic
     private Animator animator;
     private Transform model;
     //Attack Logic
     private float lastAttackTime = -999f;
-    private LayerMask playerMask;
+    private LayerMask targetMask;
     //FlowField Logic
     public enum TargetType { FlowField, Player }
     public TargetType currentMode = TargetType.FlowField;
@@ -40,11 +45,11 @@ public class EnemyAgent : MonoBehaviour
         currentMode = TargetType.FlowField;
         animator = GetComponentInChildren<Animator>();
         model = transform.Find("Model");
-        playerMask = LayerMask.GetMask("Player");
+        targetMask = LayerMask.GetMask("Player", "Base", "Construction");
         //moveSpeed = UnityEngine.Random.Range((float)6.8, (float)7.2);
     }
 
-    public void SetTarget(Transform target)
+    public void SetTarget(TargetInfo? target)
     {
         directTarget = target;
         currentMode = TargetType.Player;
@@ -61,13 +66,13 @@ public class EnemyAgent : MonoBehaviour
         Vector3 dir = Vector3.zero;
         if (currentMode == TargetType.Player && directTarget != null)
         {
-            dir = (directTarget.position - transform.position).normalized;
-            float distToTarget = Vector3.Distance(directTarget.position, transform.position);
+            dir = (directTarget.Value.targetTransform.position - transform.position).normalized;
+            float distToTarget = Vector3.Distance(directTarget.Value.closestPoint, transform.position);
             if (distToTarget > attackRange)
             {
                 transform.position += moveSpeed * Time.deltaTime * dir.normalized;
             }
-            TryInitiateAttack();
+            TryInitiateAttack(distToTarget);
         }
         else if (currentMode == TargetType.FlowField && gridController != null)
         {
@@ -85,30 +90,30 @@ public class EnemyAgent : MonoBehaviour
     public void TickDetection()
     {
         if (isDead) return;
-        Transform nearestPlayer = agentManager.GetNearestVisiblePlayerInRange(this, detectionRadius);
-        if (nearestPlayer != null)
+        TargetInfo? nearestTarget = agentManager.GetNearestVisibleTargetInRange(this, detectionRadius);
+        if (nearestTarget != null)
         {
-            lastSeenPlayer = nearestPlayer;
+            lastSeenTarget = nearestTarget;
             lastSeenTime = Time.time;
-            SetTarget(nearestPlayer);
+            SetTarget(nearestTarget);
         }
         else if (Time.time - lastSeenTime < memoryDuration)
-            SetTarget(lastSeenPlayer);
+            SetTarget(lastSeenTarget);
         else
             BackToFlowField();
     }
-    private void TryInitiateAttack()
+    private void TryInitiateAttack(float distToTarget)
     {
-        //Debug.Log($"trying to attack {directTarget.name}");
+        //Debug.Log($"trying to attack {directTarget.Value.targetTransform.name}");
         if (Time.time - lastAttackTime < attackCd) return;
         if (directTarget == null) return;
 
-        float distance = Vector3.Distance(directTarget.position, transform.position);
+        //float distance = Vector3.Distance(directTarget.Value.closestPoint, transform.position);
         //Debug.Log($"distance= {distance}");
         //Debug.Log($"attackRange= {attackRange}");
-        if (distance <= attackRange)
+        //if (distToTarget <= attackRange)
             //Debug.Log("should be attacking");
-        if (distance <= attackRange)
+        if (distToTarget <= attackRange)
         {
             lastAttackTime = Time.time;
             //Debug.Log($"reached the animator trigger");
@@ -121,13 +126,14 @@ public class EnemyAgent : MonoBehaviour
         Vector3 direction = model.forward;
         //Debug.Log("Casting to hit");
         //Debug.DrawRay(origin, direction * attackRange, Color.red, 1.0f);
-        if (Physics.Raycast(origin, direction, out RaycastHit hit, attackRange, playerMask))
+        if (Physics.Raycast(origin, direction, out RaycastHit hit, attackRange, targetMask))
         {
             //Debug.Log("ray has hit");
-            if (hit.transform.CompareTag("Player"))
+            IDamageable damageable = hit.transform.GetComponentInParent<IDamageable>();
+            if (damageable != null)
             {
-                //Debug.Log("player hit, sending dmg");
-                hit.transform.GetComponentInParent<PlayerController>().TakeDamage(damage);
+                //Debug.Log("target hit, sending dmg");
+                damageable.TakeDamage(damage);
             }
         }
     }

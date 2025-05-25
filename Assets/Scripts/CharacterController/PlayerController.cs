@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {    
     [Header("References")]
        
@@ -33,7 +33,11 @@ public class PlayerController : MonoBehaviour
     private Vector3 airMomentum = Vector3.zero;
     public PlayerInput PlayerInput => playerInput;
 
-
+    private void Start()
+    {
+        healthUI.SetTargetObject(gameObject);
+        healthUI.UpdateHealthDisplay(health, "Health");
+    }
     private void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -119,7 +123,7 @@ public class PlayerController : MonoBehaviour
         if (isDead)
             return;
         health -= damage;
-        healthUI.UpdateHealthDisplay();
+        healthUI.UpdateHealthDisplay(health, "Health");
         if (health <= 0)
             Die();
     }

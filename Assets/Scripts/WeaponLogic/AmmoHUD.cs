@@ -3,12 +3,12 @@ using TMPro;
 
 public class AmmoHUD : MonoBehaviour
 {
-    public WeaponBase weapon;
+    public IAmmoUser weapon;
     public TextMeshProUGUI ammoText;
 
     private void Awake()
     {
-        weapon = GetComponentInParent<WeaponBase>();
+        weapon = GetComponentInParent<IAmmoUser>();
         ammoText = GetComponentInChildren<TextMeshProUGUI>();
     }
     public void UpdateAmmoDisplay()

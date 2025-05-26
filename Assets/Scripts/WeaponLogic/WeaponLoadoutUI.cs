@@ -2,12 +2,11 @@ using UnityEngine;
 
 public class WeaponLoadoutUI : MonoBehaviour
 {
-    public WeaponHolder weaponHolder;
-    public GameObject pistolPrefab;
-
-    public void EquipPistol()
+    [SerializeField] WepHolderV1 holder;
+    [SerializeField] GameObject riflePrefab;
+    public void EquipRifle()
     {
-        weaponHolder.EquipWeapon(pistolPrefab);
-        Debug.Log("EquipPistol() called!");
+        holder.EquipWeapon(riflePrefab);
+        Debug.Log("EquipWeapon() called!");
     }
 }

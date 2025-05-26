@@ -607,7 +607,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3806132585696714144, guid: d41a9b9b1b7232c458b9b760028c2944, type: 3}
       propertyPath: spawnCount
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3806132585696714144, guid: d41a9b9b1b7232c458b9b760028c2944, type: 3}
       propertyPath: spawnRadius
@@ -615,7 +615,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7276682499086626976, guid: d41a9b9b1b7232c458b9b760028c2944, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 76.4
+      value: 81.9
       objectReference: {fileID: 0}
     - target: {fileID: 7276682499086626976, guid: d41a9b9b1b7232c458b9b760028c2944, type: 3}
       propertyPath: m_LocalPosition.y
@@ -623,7 +623,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7276682499086626976, guid: d41a9b9b1b7232c458b9b760028c2944, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 18.9
+      value: 71.6
       objectReference: {fileID: 0}
     - target: {fileID: 7276682499086626976, guid: d41a9b9b1b7232c458b9b760028c2944, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1784,7 +1784,7 @@ GameObject:
   - component: {fileID: 517282702}
   - component: {fileID: 517282701}
   m_Layer: 5
-  m_Name: EquipPistolButton
+  m_Name: EquipRifleButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1856,7 +1856,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1404478354}
         m_TargetAssemblyTypeName: WeaponLoadoutUI, Assembly-CSharp
-        m_MethodName: EquipPistol
+        m_MethodName: EquipRifle
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2959,7 +2959,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Equip Pistol
+  m_text: Equip Rifle
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4106,6 +4106,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1248637448}
+  - component: {fileID: 1248637449}
   m_Layer: 3
   m_Name: weaponMount
   m_TagString: Untagged
@@ -4122,12 +4123,25 @@ Transform:
   m_GameObject: {fileID: 1248637447}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.116, y: -0.17, z: 0.115}
+  m_LocalPosition: {x: 0.12, y: -0.138, z: 0.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2071456607}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1248637449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248637447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94198b0719637740a03619eae858567, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponMountPoint: {fileID: 1248637448}
 --- !u!1 &1259642526
 GameObject:
   m_ObjectHideFlags: 0
@@ -4536,8 +4550,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b4e6cee13081604e903a92b6599b0d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponHolder: {fileID: 2071456612}
-  pistolPrefab: {fileID: 7964042734894647181, guid: e9998fd6abd1d6e4f90cc38c060960f5, type: 3}
+  holder: {fileID: 1248637449}
+  riflePrefab: {fileID: 1508942685438163706, guid: 9f9bd3e1cb5c4dc43839140f88e630f7, type: 3}
 --- !u!4 &1404478355
 Transform:
   m_ObjectHideFlags: 0
@@ -4986,7 +5000,7 @@ Transform:
   m_GameObject: {fileID: 1610314687}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.67999095, z: -0, w: 0.7332206}
-  m_LocalPosition: {x: 48.4, y: 3.5, z: 3}
+  m_LocalPosition: {x: 3.71, y: 1.79, z: -1.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5179,6 +5193,38 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 3b9a3c67-3194-4ff7-b193-61e8c84d05ff
     m_ActionName: 'UI/Menu[/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1248637449}
+        m_TargetAssemblyTypeName: WepHolderV1, Assembly-CSharp
+        m_MethodName: OnAction1Input
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 4de6a54d-a570-43db-bd5f-75856f6e9543
+    m_ActionName: 'Player/Fire[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1248637449}
+        m_TargetAssemblyTypeName: WepHolderV1, Assembly-CSharp
+        m_MethodName: OnAction2Input
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e4f5f6c1-255a-4278-969a-d143d249c770
+    m_ActionName: 'Player/Reload[/Keyboard/r]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -5810,7 +5856,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0

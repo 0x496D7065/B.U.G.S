@@ -34,6 +34,7 @@ public class RifleV1 : MonoBehaviour, IUsable, IAmmoUser, IRecoilData
     public ParticleSystem casingParticles;
     public ParticleSystem muzzleFlash;
     public Animator animator;
+    public WeaponKick weaponKick;
     [Header("HUD Logic")]
     public int currentMag => _currentMag;
     public int currentAmmoPool => _currentAmmoPool;
@@ -112,6 +113,7 @@ public class RifleV1 : MonoBehaviour, IUsable, IAmmoUser, IRecoilData
         //Add trail
         audioSource.PlayOneShot(shootSound);
         recoilScript.RecoilFire();
+        weaponKick.PlayKick();
         if (Physics.Raycast(firePoint.transform.position, firePoint.transform.forward, out RaycastHit hit, range, targetMask))
         {
             //Debug.Log(hit.transform.name);

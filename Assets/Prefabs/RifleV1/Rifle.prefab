@@ -10275,11 +10275,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2094049608299246942, guid: 4ccdd9b59736d704894a0aa6c7a6fcd8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.0193
       objectReference: {fileID: 0}
     - target: {fileID: 2094049608299246942, guid: 4ccdd9b59736d704894a0aa6c7a6fcd8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.01089
       objectReference: {fileID: 0}
     - target: {fileID: 2415282356437483069, guid: 4ccdd9b59736d704894a0aa6c7a6fcd8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10323,7 +10323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6374764146381396725, guid: 4ccdd9b59736d704894a0aa6c7a6fcd8, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8188643637834444363, guid: 4ccdd9b59736d704894a0aa6c7a6fcd8, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -10355,6 +10355,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4ccdd9b59736d704894a0aa6c7a6fcd8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2779490695690673281}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4ccdd9b59736d704894a0aa6c7a6fcd8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -7781981527952040651}
   m_SourcePrefab: {fileID: 100100000, guid: 4ccdd9b59736d704894a0aa6c7a6fcd8, type: 3}
 --- !u!1 &1508942685438163706 stripped
 GameObject:
@@ -10381,10 +10384,19 @@ MonoBehaviour:
   _currentAmmoPool: 0
   _currentMag: 0
   FullAuto: 1
+  recoilX: -2
+  recoilY: 2
+  recoilZ: 0.35
+  aimRecoilX: -1.5
+  aimRecoilY: 1
+  aimRecoilZ: 0.3
+  snappiness: 6
+  returnSpeed: 2
   firePoint: {fileID: 1085042764858374171}
   shootSound: {fileID: 8300000, guid: 2f9862c159fe5f840bd5a4b0f0a86af1, type: 3}
   casingParticles: {fileID: 4724561817703779298}
   muzzleFlash: {fileID: 8586438640440203687}
+  animator: {fileID: -7781981527952040651}
 --- !u!82 &2779490695690673281
 AudioSource:
   m_ObjectHideFlags: 0
@@ -10482,6 +10494,28 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &-7781981527952040651
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508942685438163706}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 63e8b2c0482c3a14bbea692a0e9c91ca, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &2286429809469251648 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4ccdd9b59736d704894a0aa6c7a6fcd8, type: 3}

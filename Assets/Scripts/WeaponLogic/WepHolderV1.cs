@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class WepHolderV1 : MonoBehaviour
 {
     private IUsable currentWeapon;
-    private GameObject currentWeaponObject;
+    public GameObject currentWeaponObject;
     public Transform weaponMountPoint;
 
     public void EquipWeapon(GameObject weaponObject)
@@ -23,5 +23,9 @@ public class WepHolderV1 : MonoBehaviour
     public void OnAction2Input()
     {
         currentWeapon?.Action2();
+    }
+    public void OnAction3Input(InputAction.CallbackContext context)
+    {
+        currentWeapon?.Action3(context);
     }
 }

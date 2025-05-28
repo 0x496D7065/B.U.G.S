@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 954124b3b577e2e4a8c8201d4edcde4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cellDiameter: 1
 --- !u!1 &3382082598167045121
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,5 +91,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: {x: 500, y: 500}
-  cellRadius: 0.5
+  cellRadius: 0.75
   curFlowField: {fileID: 1625429759802305511}

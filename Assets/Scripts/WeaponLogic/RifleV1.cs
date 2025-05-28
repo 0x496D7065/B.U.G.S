@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.Rendering.DebugUI;
@@ -16,25 +17,27 @@ public class RifleV1 : MonoBehaviour, IUsable, IAmmoUser, IRecoilData
     public bool FullAuto = false;
 
     [Header("HipFire Recoil")]
-    [SerializeField] public float recoilX;
-    [SerializeField] public float recoilY;
-    [SerializeField] public float recoilZ;
+    [SerializeField] private float recoilX;
+    [SerializeField] private float recoilY;
+    [SerializeField] private float recoilZ;
 
     [Header("Aim Recoil")]
-    [SerializeField] public float aimRecoilX;
-    [SerializeField] public float aimRecoilY;
-    [SerializeField] public float aimRecoilZ;
+    [SerializeField] private float aimRecoilX;
+    [SerializeField] private float aimRecoilY;
+    [SerializeField] private float aimRecoilZ;
 
-    [SerializeField] public float snappiness;
-    [SerializeField] public float returnSpeed;
+    [SerializeField] private float snappiness;
+    [SerializeField] private float returnSpeed;
 
     [Header("Effects")]
     public Transform firePoint;
     public AudioClip shootSound;
     public ParticleSystem casingParticles;
     public ParticleSystem muzzleFlash;
+    //public TrailRenderer bulletTrail;
     public Animator animator;
     public WeaponKick weaponKick;
+    public TrailPooler trailPool;
     [Header("HUD Logic")]
     public int currentMag => _currentMag;
     public int currentAmmoPool => _currentAmmoPool;
@@ -109,21 +112,24 @@ public class RifleV1 : MonoBehaviour, IUsable, IAmmoUser, IRecoilData
     {
         if (isReloading || _currentMag <= 0)
             return;
-        muzzleFlash.Play();
+        Vector3 endPoint;
+        IDamageable damageable = null;
+        muzzleFlash.Emit(1);
         //Add trail
         audioSource.PlayOneShot(shootSound);
         recoilScript.RecoilFire();
         weaponKick.PlayKick();
         if (Physics.Raycast(firePoint.transform.position, firePoint.transform.forward, out RaycastHit hit, range, targetMask))
         {
-            //Debug.Log(hit.transform.name);
-            IDamageable damageable = hit.transform.GetComponentInParent<IDamageable>();
-            if (damageable != null)
-            {
-                //Debug.Log("target hit, sending dmg");
-                damageable.TakeDamage(damage);
-            }
+            endPoint = hit.point;
+            damageable = hit.transform.GetComponentInParent<IDamageable>();
         }
+        else
+        {
+            endPoint = firePoint.transform.position + firePoint.transform.forward * range;
+        }
+        TrailRenderer trail = trailPool.GetFromPool(firePoint.transform.position, Quaternion.identity);
+        StartCoroutine(SpawnTrail(trail, endPoint, damageable));
         _currentMag -= 1;
         casingParticles.Emit(1);
         nextFireTime = Time.deltaTime + fireRate;
@@ -147,5 +153,21 @@ public class RifleV1 : MonoBehaviour, IUsable, IAmmoUser, IRecoilData
         _currentAmmoPool -= reloaded;
         ammoHUD.UpdateAmmoDisplay();
         Debug.Log("finished reloading");
+    }
+    private IEnumerator SpawnTrail(TrailRenderer trail, Vector3 endPosition, IDamageable damageTarget)
+    {
+        float time = 0f;
+        Vector3 startPosition = trail.transform.position;
+
+        while (time < 1)
+        {
+            trail.transform.position = Vector3.Lerp(startPosition, endPosition, time);
+            time += Time.deltaTime / trail.time;
+
+            yield return null;
+        }
+        trail.transform.position = endPosition;
+        damageTarget?.TakeDamage(damage);
+        trailPool.ReturnTrail(trail);
     }
 }

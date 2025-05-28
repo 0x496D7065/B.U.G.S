@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.Processors;
 
-public class EnemyAgent : MonoBehaviour
+public class EnemyAgent : MonoBehaviour, IDamageable
 {
     [Header("Stats")]
     public float moveSpeed;
@@ -29,6 +29,7 @@ public class EnemyAgent : MonoBehaviour
     //Animation Logic
     private Animator animator;
     private Transform model;
+    public ImpactType impactType;
     //Attack Logic
     private float lastAttackTime = -999f;
     private LayerMask targetMask;
@@ -133,15 +134,17 @@ public class EnemyAgent : MonoBehaviour
             if (damageable != null)
             {
                 //Debug.Log("target hit, sending dmg");
-                damageable.TakeDamage(damage);
+                damageable.TakeDamage(damage, hit);
             }
         }
     }
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, RaycastHit hit)
     {
+        ImpactEffectManager.Instance.PlayImpact(impactType, hit, hit.normal);
         health -= damage;
         if (health <= 0 && !isDead)
         {
+            Debug.Log("died");
             Die();
         }
     }

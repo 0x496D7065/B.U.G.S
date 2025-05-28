@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             movementSpeed = 3.5f;
         //animator.SetTrigger("Jump");
     }
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, RaycastHit hit)
     {
         if (isDead)
             return;

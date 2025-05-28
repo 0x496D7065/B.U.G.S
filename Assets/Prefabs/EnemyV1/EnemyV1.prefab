@@ -75,6 +75,7 @@ MonoBehaviour:
   attackRange: 1.5
   attackCd: 2
   isDead: 0
+  impactType: 3
   currentMode: 0
   gridController: {fileID: 0}
 --- !u!195 &1163246090446960964

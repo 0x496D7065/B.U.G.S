@@ -7,16 +7,18 @@ public class Base : MonoBehaviour, IDamageable
     [Header("Settings")]
     public int health = 1000;
     public bool isDestroyed = false;
+    public ImpactType impactType;
 
     private void Start()
     {
         healthUI.SetTargetObject(gameObject);
         healthUI.UpdateHealthDisplay(health, "Base");
     }
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, RaycastHit hit)
     {
         if (isDestroyed)
             return;
+        ImpactEffectManager.Instance.PlayImpact(impactType, hit, hit.normal);
         health -= damage;
         healthUI.UpdateHealthDisplay(health, "Base");
         if (health <= 0)

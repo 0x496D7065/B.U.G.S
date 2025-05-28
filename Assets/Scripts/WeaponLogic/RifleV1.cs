@@ -115,12 +115,12 @@ public class RifleV1 : MonoBehaviour, IUsable, IAmmoUser, IRecoilData
         Vector3 endPoint;
         IDamageable damageable = null;
         muzzleFlash.Emit(1);
-        //Add trail
         audioSource.PlayOneShot(shootSound);
         recoilScript.RecoilFire();
         weaponKick.PlayKick();
         if (Physics.Raycast(firePoint.transform.position, firePoint.transform.forward, out RaycastHit hit, range, targetMask))
         {
+            Debug.Log($"{hit.transform.name}");
             endPoint = hit.point;
             damageable = hit.transform.GetComponentInParent<IDamageable>();
         }
@@ -129,7 +129,7 @@ public class RifleV1 : MonoBehaviour, IUsable, IAmmoUser, IRecoilData
             endPoint = firePoint.transform.position + firePoint.transform.forward * range;
         }
         TrailRenderer trail = trailPool.GetFromPool(firePoint.transform.position, Quaternion.identity);
-        StartCoroutine(SpawnTrail(trail, endPoint, damageable));
+        StartCoroutine(SpawnTrail(trail, endPoint, damageable, hit));
         _currentMag -= 1;
         casingParticles.Emit(1);
         nextFireTime = Time.deltaTime + fireRate;
@@ -154,7 +154,7 @@ public class RifleV1 : MonoBehaviour, IUsable, IAmmoUser, IRecoilData
         ammoHUD.UpdateAmmoDisplay();
         Debug.Log("finished reloading");
     }
-    private IEnumerator SpawnTrail(TrailRenderer trail, Vector3 endPosition, IDamageable damageTarget)
+    private IEnumerator SpawnTrail(TrailRenderer trail, Vector3 endPosition, IDamageable damageTarget, RaycastHit hit)
     {
         float time = 0f;
         Vector3 startPosition = trail.transform.position;
@@ -167,7 +167,7 @@ public class RifleV1 : MonoBehaviour, IUsable, IAmmoUser, IRecoilData
             yield return null;
         }
         trail.transform.position = endPosition;
-        damageTarget?.TakeDamage(damage);
+        damageTarget?.TakeDamage(damage, hit);
         trailPool.ReturnTrail(trail);
     }
 }
